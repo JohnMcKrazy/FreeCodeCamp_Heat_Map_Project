@@ -26,6 +26,9 @@ HTML {
     --fontSizeN: 1.5em;
     --fontSizeS: 1.2em;
     /*¿ FONT WEIGHT--START */
+    --fontWeightL: 200;
+    --fontWeightN: 400;
+    --fontWeightB: 700;
     /*¿TRANSITIONS--START */
     --transitionUF: all 250ms ease;
     --transitionF: all 500ms ease;
@@ -41,7 +44,7 @@ HTML {
     /*¿GENERAL START */
     width: 100%;
     height: 100vh;
-    --fontSize: 10px;
+    --fontSize: 12px;
     font-size: var(--fontSize);
     line-break: loose;
     letter-spacing: 0.15rem;
@@ -75,20 +78,25 @@ A:active {
     color: unset;
 }
 /*! PARTS */
-TEXT {
-    display: block;
+h1,
+h2 {
     text-align: center;
+    font-weight: var(--fontWeightN);
 }
-.map_container {
+.general_container {
+    margin-top: 2rem;
+}
+.heat_map_container {
     margin-top: 2rem;
 }
 .map_title {
     color: var(--firstColor);
-    font-size: 2rem;
 }
 
 .map_subtitle {
-    font-size: 1.5rem;
     margin-top: 0.5rem;
     color: var(--midGray);
+}
+#tooltip {
+    position: fixed;
 }
