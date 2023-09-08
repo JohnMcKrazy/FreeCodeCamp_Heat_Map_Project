@@ -24,7 +24,6 @@ document.addEventListener("DOMContentLoaded", () => {
             top: 1 * fontSize,
             bottom: 8 * fontSize,
         };
-
         const variance = rawData.monthlyVariance.map((val) => val.variance);
         console.log(variance);
         const minTemp = rawData.baseTemperature + Math.min.apply(null, variance);
@@ -114,17 +113,11 @@ document.addEventListener("DOMContentLoaded", () => {
             .enter()
             .append("rect")
             .attr("class", "cell")
-            .attr("data-month", (d) => {
-                d.month;
-            })
-            .attr("data-year", (d) => {
-                d.year;
-            })
-            .attr("data-temp", (d) => {
-                rawData.baseTemperature + d.variance;
-            })
+            .attr("data-month", (d) => d.month)
+            .attr("data-year", (d) => d.year)
+            .attr("data-temp", (d) => rawData.baseTemperature + d.variance)
             .attr("x", (d) => xScale(d.year))
-            .attr("y", (d) => yScale(d.month))
+            .attr("y", (d) => yScale(d.month - 1))
             .attr("width", (d) => xScale.bandwidth(d.year))
             .attr("height", (d) => yScale.bandwidth(d.month));
     };
