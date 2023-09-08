@@ -83,6 +83,9 @@ h2 {
     text-align: center;
     font-weight: var(--fontWeightN);
 }
+.ticket {
+    fill: var(--secondColor);
+}
 .general_container {
     margin-top: 2rem;
 }
@@ -96,6 +99,9 @@ h2 {
 .map_subtitle {
     margin-top: 0.5rem;
     color: var(--midGray);
+}
+.map {
+    stroke-width: 0;
 }
 #tooltip {
     position: fixed;

@@ -25,6 +25,11 @@ document.addEventListener("DOMContentLoaded", () => {
             bottom: 8 * fontSize,
         };
 
+        const variance = rawData.monthlyVariance.map((val) => val.variance);
+        console.log(variance);
+        const minTemp = rawData.baseTemperature + Math.min.apply(null, variance);
+        const maxTemp = rawData.baseTemperature + Math.max.apply(null, variance);
+        console.log(minTemp, maxTemp);
         const heatMapSVG = heatMapContainer
             .append("svg")
             .attr("class", "heat_map_container")
@@ -37,56 +42,38 @@ document.addEventListener("DOMContentLoaded", () => {
             .attr("id", "description")
             .html(rawData.monthlyVariance[0].year + " - " + rawData.monthlyVariance[rawData.monthlyVariance.length - 1].year + ": base temperature " + rawData.baseTemperature + "&#8451;");
 
-        /* 
-             //^ DATES DATA  //
-        const yearsDate = rawData.map((item)=>  new Date(item[0]));
-        //^ DATES DATA MAX AND MIN  //
-        const xMax = new Date(d3.max(yearsDate));
-        const xMin = new Date(d3.min(yearsDate));
-        const xGroup = heatMapSVG.append("g").attr("class", "axis x_axis").attr("id", "x-axis");
-        const yGroup = heatMapSVG.append("g").attr("class", "axis y_axis").attr("id", "y-axis"); */
-
         const yScale = d3
             .scaleBand()
             // months
             .domain([0, 1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11])
-            .rangeRound([0, height])
-            .padding(0);
+            .rangeRound([0, height]);
 
         const yAxis = d3
             .axisLeft()
             .scale(yScale)
             .tickValues(yScale.domain())
-            .tickFormat(function (month) {
+            .tickFormat((month) => {
                 const date = new Date(0);
                 date.setUTCMonth(month);
                 const format = d3.utcFormat("%B");
                 return format(date);
-            })
-            .tickSize(10, 1);
+            });
 
         heatMapSVG
             .append("g")
-            .classed("y-axis", true)
+            .attr("class", "axis y-axis")
             .attr("id", "y-axis")
-            .attr("transform", "translate(" + padding.left + "," + padding.top + ")")
+            .attr("transform", `translate(${padding.left},${padding.top})`)
             .call(yAxis)
             .append("text")
             .text("Months")
             .style("text-anchor", "middle")
-            .attr("transform", "translate(" + -7 * fontSize + "," + height / 2 + ")" + "rotate(-90)")
+            .attr("transform", `translate(${-7 * fontSize},${height / 2}) rotate(-90)`)
             .attr("fill", "black");
 
-        // xaxis
-
-        // ordinal scale
         const xScale = d3
             .scaleBand()
-            .domain(
-                rawData.monthlyVariance.map(function (val) {
-                    return val.year;
-                })
-            )
+            .domain(rawData.monthlyVariance.map((val) => val.year))
             .range([0, width])
             .padding(0);
 
@@ -94,12 +81,11 @@ document.addEventListener("DOMContentLoaded", () => {
             .axisBottom()
             .scale(xScale)
             .tickValues(
-                xScale.domain().filter(function (year) {
-                    // set ticks to years divisible by 10
+                xScale.domain().filter((year) => {
                     return year % 10 === 0;
                 })
             )
-            .tickFormat(function (year) {
+            .tickFormat((year) => {
                 const date = new Date(0);
                 date.setUTCFullYear(year);
                 const format = d3.utcFormat("%Y");
@@ -109,15 +95,38 @@ document.addEventListener("DOMContentLoaded", () => {
 
         heatMapSVG
             .append("g")
-            .classed("x-axis", true)
+            .attr("class", "axis x-axis")
             .attr("id", "x-axis")
-            .attr("transform", "translate(" + padding.left + "," + (height + padding.top) + ")")
+            .attr("transform", `translate(${padding.left},${height + padding.top})`)
             .call(xAxis)
             .append("text")
             .text("Years")
             .style("text-anchor", "middle")
-            .attr("transform", "translate(" + width / 2 + "," + 3 * fontSize + ")")
+            .attr("transform", `translate(${width / 2},${3 * fontSize})`)
             .attr("fill", "black");
+
+        heatMapSVG
+            .append("g")
+            .attr("class", "map")
+            .attr("transform", `translate(${padding.left}, ${padding.top})`)
+            .selectAll("rect")
+            .data(rawData.monthlyVariance)
+            .enter()
+            .append("rect")
+            .attr("class", "cell")
+            .attr("data-month", (d) => {
+                d.month;
+            })
+            .attr("data-year", (d) => {
+                d.year;
+            })
+            .attr("data-temp", (d) => {
+                rawData.baseTemperature + d.variance;
+            })
+            .attr("x", (d) => xScale(d.year))
+            .attr("y", (d) => yScale(d.month))
+            .attr("width", (d) => xScale.bandwidth(d.year))
+            .attr("height", (d) => yScale.bandwidth(d.month));
     };
     fetchData();
 });
