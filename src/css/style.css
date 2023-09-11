@@ -11,6 +11,8 @@ HTML {
     --firstColor: rgb(41, 165, 134);
     --bgColor: rgb(250, 250, 250);
     --textColor: rgb(10, 10, 10);
+    --tooltipBG: rgba(200, 200, 200, 90%);
+    --tooltipText: whitesmoke;
     /*¿FONTS START  */
     /*¿ FONT SIZES--START */
     --fontSizeXL: 5em;
@@ -91,8 +93,18 @@ h2 {
     margin-top: 0.5rem;
     color: var(--secondColor);
 }
+.tooltip {
+    position: absolute;
+    padding: 0.5rem 1rem;
+    border-radius: 0.25rem;
+    height: fit-content;
+    width: fit-content;
+    background: var(--tooltipBG);
+    opacity: 0;
+    transition: opacity 250ms ease-in-out;
+}
 g rect:hover {
-    fill: white;
+    fill: lightgreen;
 }
 #tooltip {
     position: fixed;

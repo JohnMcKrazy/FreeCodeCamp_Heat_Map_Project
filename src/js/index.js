@@ -10,7 +10,7 @@ document.addEventListener("DOMContentLoaded", () => {
     const heatMapGeneral = d3.select(".general_container");
 
     // ! CREATE TIP ! //
-    const tip = heatMapGeneral.append("div").attr("class", "d3-tip").attr("id", "tooltip");
+    const tooltip = heatMapGeneral.append("div").attr("class", "tooltip").attr("id", "tooltip").html(`<p>Date= <span class="date_tip"></span></p><br/></br><p>Base Temp= <span class="temp_tip"></span>&#8451;</p><br/><p>Variance: <span class="var_tip"></span>&#8451;</p>`);
 
     // ! CREATE TITLE SECTION! //
     const titleSection = heatMapGeneral.append("section").attr("id", "title_section");
@@ -28,6 +28,7 @@ document.addEventListener("DOMContentLoaded", () => {
     const fetchData = async () => {
         const rawData = await d3.json(apiURL);
         console.log(rawData);
+
         const monthlyVariance = rawData.monthlyVariance;
         const baseTemperature = rawData.baseTemperature;
         const fontSize = 12;
@@ -39,9 +40,10 @@ document.addEventListener("DOMContentLoaded", () => {
             top: 1 * fontSize,
             bottom: 5 * fontSize,
         };
+        // ?FIX POSITION GRID? //
+        monthlyVariance.forEach((val) => (val.month -= 1));
 
         const variance = monthlyVariance.map((val) => val.variance);
-        console.log(variance);
         const minTemp = baseTemperature + Math.min.apply(null, variance);
         const maxTemp = baseTemperature + Math.max.apply(null, variance);
         console.log(minTemp, maxTemp);
@@ -146,7 +148,7 @@ document.addEventListener("DOMContentLoaded", () => {
             .attr("transform", `translate(${width / 2},${3 * fontSize})`);
 
         // ! CREATE HEAT MAP RECTS !
-        heatMapSVG
+        const cells = heatMapSVG
             .append("g")
             .attr("class", "map")
             .attr("transform", `translate(${padding.left}, ${padding.top})`)
@@ -159,10 +161,19 @@ document.addEventListener("DOMContentLoaded", () => {
             .attr("data-year", (d) => d.year)
             .attr("data-temp", (d) => baseTemperature + d.variance)
             .attr("x", (d) => xScale(d.year))
-            .attr("y", (d) => yScale(d.month - 1))
+            .attr("y", (d) => yScale(d.month))
             .attr("width", (d) => xScale.bandwidth(d.year))
             .attr("height", (d) => yScale.bandwidth(d.month))
-            .attr("fill", (d) => legendThreshold(baseTemperature + d.variance));
+            .attr("fill", (d) => legendThreshold(baseTemperature + d.variance))
+            .on("mouseover", (event, d) => {
+                tooltip.style("opacity", 1).attr("data-year", d.year);
+                document.querySelector(".date_tip").textContent = new Date(d.year, d.month);
+                document.querySelector(".temp_tip").textContent = baseTemperature + d.variance;
+                document.querySelector(".var_tip").textContent = d.variance;
+            })
+            .on("mouseout", () => {
+                tooltip.style("opacity", 0);
+            });
 
         // ! CREATE LEGEND X SCALE ! //
         const legend_xScale = d3.scaleLinear().domain([minTemp, maxTemp]).range([0, legendWidth]);
