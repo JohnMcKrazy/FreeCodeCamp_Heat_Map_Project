@@ -7,17 +7,10 @@
 }
 HTML {
     /*¿GENERAL COLORS START */
-    --lightGray: rgb(180, 180, 180);
-    --midGray: rgb(166, 166, 166);
-    --darkGray: rgb(77, 77, 77);
-    --black: rgb(10, 10%, 10%);
-    --white: rgb(240, 240, 240);
-    --blackOff: rgb(38, 38, 38);
-    --whiteOff: rgb(217, 217, 217);
-    --midLight: rgb(128, 128, 128);
-    /*¿ COLORS START */
+    --secondColor: rgb(166, 166, 166);
     --firstColor: rgb(41, 165, 134);
-    --secondColor: rgb(189, 124, 5);
+    --bgColor: rgb(250, 250, 250);
+    --textColor: rgb(10, 10, 10);
     /*¿FONTS START  */
     /*¿ FONT SIZES--START */
     --fontSizeXL: 5em;
@@ -34,13 +27,6 @@ HTML {
     --transitionF: all 500ms ease;
     --transitionM: all 750ms ease;
     --transitionS: all 1000ms ease;
-    /*¿PADDING */
-    --paddingXS: 0.25rem;
-    --paddingS: 0.5rem;
-    --paddingM: 1rem;
-    --paddingL: 1.5rem;
-    --paddingX: 2rem;
-    --paddingXX: 2.5rem;
     /*¿GENERAL START */
     width: 100%;
     height: 100vh;
@@ -49,7 +35,6 @@ HTML {
     line-break: loose;
     letter-spacing: 0.15rem;
     line-height: 1;
-    scroll-behavior: smooth;
     font-family: "Poppins", sans-serif;
 }
 /*! GENERAL PAGE */
@@ -78,6 +63,12 @@ A:active {
     color: unset;
 }
 /*! PARTS */
+.axis text {
+    fill: var(--secondColor);
+}
+.tick text {
+    fill: var(--firstColor);
+}
 h1,
 h2 {
     text-align: center;
@@ -98,10 +89,10 @@ h2 {
 
 .map_subtitle {
     margin-top: 0.5rem;
-    color: var(--midGray);
+    color: var(--secondColor);
 }
-.map {
-    stroke-width: 0;
+g rect:hover {
+    fill: white;
 }
 #tooltip {
     position: fixed;
