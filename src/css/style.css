@@ -104,8 +104,6 @@ h2 {
     transition: opacity 250ms ease-in-out;
 }
 g rect:hover {
-    fill: lightgreen;
-}
-#tooltip {
-    position: fixed;
+    stroke-width: 1px;
+    stroke: black;
 }
