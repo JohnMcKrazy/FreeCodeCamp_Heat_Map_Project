@@ -56,10 +56,10 @@ document.addEventListener("DOMContentLoaded", () => {
             .scaleThreshold()
             .domain(
                 ((min, max, count) => {
-                    var array = [];
-                    var step = (max - min) / count;
-                    var base = min;
-                    for (var i = 1; i < count; i++) {
+                    const array = [];
+                    const step = (max - min) / count;
+                    const base = min;
+                    for (let i = 1; i < count; i++) {
                         array.push(base + i * step);
                     }
                     return array;
